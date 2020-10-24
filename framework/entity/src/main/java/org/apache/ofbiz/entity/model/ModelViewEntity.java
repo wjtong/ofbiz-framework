@@ -37,6 +37,8 @@ import org.apache.ofbiz.base.util.UtilFormatOut;
 import org.apache.ofbiz.base.util.UtilTimer;
 import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.base.util.UtilXml;
+import org.apache.ofbiz.entity.GenericEntityException;
+import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.condition.EntityComparisonOperator;
 import org.apache.ofbiz.entity.condition.EntityCondition;
 import org.apache.ofbiz.entity.condition.EntityConditionValue;
@@ -1100,6 +1102,38 @@ public class ModelViewEntity extends ModelEntity {
         public final List<ModelKeyMap> keyMaps = new LinkedList<>();
         public final ViewEntityCondition viewEntityCondition;
 
+        // fix for upgrade
+        public ModelViewLink(ModelViewEntity modelViewEntity, GenericValue viewLink) {
+            this.entityAlias = viewLink.getString("entityAlias");
+            this.relEntityAlias = viewLink.getString("relEntityAlias");
+            // if anything but true will be false; ie defaults to false
+            this.relOptional = viewLink.getBoolean("relOptional");
+            
+            List<GenericValue> viewLinkKeyMaps = null;
+			List<GenericValue> entityConditions = null;
+			try {
+				viewLinkKeyMaps = viewLink.getRelated("ViewLinkKeyMap", null, null, true);
+				entityConditions = viewLink.getRelated("EntityCondition", null, null, true);
+			} catch (GenericEntityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if (UtilValidate.isNotEmpty(viewLinkKeyMaps)) {
+				for (GenericValue keyMap:viewLinkKeyMaps) {
+					ModelKeyMap modelKeyMap = new ModelKeyMap(keyMap.getString("fieldName"), keyMap.getString("relFieldName"));
+					keyMaps.add(modelKeyMap);
+				}
+			}
+
+			ViewEntityCondition viewEntityCondition = null;
+			if (UtilValidate.isNotEmpty(entityConditions)) {
+				for (GenericValue entityCondition:entityConditions) { // 一般来说只有一个，暂时没看到有多个的例子
+					viewEntityCondition = new ViewEntityCondition(modelViewEntity, this, entityCondition);
+				}
+			}
+			this.viewEntityCondition = viewEntityCondition;
+        }
+
         public ModelViewLink(ModelViewEntity modelViewEntity, Element viewLinkElement) {
             this.entityAlias = UtilXml.checkEmpty(viewLinkElement.getAttribute("entity-alias")).intern();
             this.relEntityAlias = UtilXml.checkEmpty(viewLinkElement.getAttribute("rel-entity-alias")).intern();
@@ -1259,6 +1293,43 @@ public class ModelViewEntity extends ModelEntity {
         public final ViewCondition whereCondition;
         public final ViewCondition havingCondition;
 
+        // fix for upgrade
+        // Added by Tong
+        public ViewEntityCondition(ModelViewEntity modelViewEntity, ModelViewLink modelViewLink, GenericValue entityCondition) {
+            this.modelViewEntity = modelViewEntity;
+            this.modelViewLink = modelViewLink;
+            this.filterByDate = entityCondition.getBoolean("filterByDate");
+            this.distinct = entityCondition.getBoolean("isDistinct");
+            // process order-by，目前数据库的OdataView只支持一个字段的orderBy
+            String orderByField = entityCondition.getString("orderByField");
+            if (UtilValidate.isEmpty(orderByField)) {
+            	orderByList = null;
+            } else {
+            	orderByList = new ArrayList<String>(1);
+            	orderByList.add(orderByField);
+            }
+            
+            ViewCondition whereCond = null;
+            ViewCondition havingCond = null;
+            List<GenericValue> conditionLists = null;
+			try {
+				conditionLists = entityCondition.getRelated("ConditionList", null, null, true);
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+            if (UtilValidate.isNotEmpty(conditionLists)) {
+            	for (GenericValue conditionList:conditionLists) {
+            		if (conditionList.getBoolean("isHaving")) {
+            			havingCond = new ViewConditionList(this, conditionList);
+            		} else {
+            			whereCond = new ViewConditionList(this, conditionList);
+            		}
+            	}
+            }
+            this.whereCondition = whereCond;
+            this.havingCondition = havingCond;
+        }
+
         // TODO: add programatic constructor
         public ViewEntityCondition(ModelViewEntity modelViewEntity, ModelViewLink modelViewLink, Element element) {
             this.modelViewEntity = modelViewEntity;
@@ -1333,6 +1404,50 @@ public class ModelViewEntity extends ModelEntity {
         public final String relFieldName;
         public final Object value;
         public final boolean ignoreCase;
+
+        // fix for upgrade
+        // Added by tong
+        public ViewConditionExpr(ViewEntityCondition viewEntityCondition, GenericValue conditionExpr) {
+            this.viewEntityCondition = viewEntityCondition;
+            String entityAlias = conditionExpr.getString("entityAlias");
+            this.fieldName = conditionExpr.getString("fieldName");
+
+            String operator = conditionExpr.getString("operator");
+            if (UtilValidate.isEmpty(operator)) {
+            	operator = "equals";
+            }
+            try {
+                this.operator = EntityOperator.lookupComparison(operator);
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("[" + this.viewEntityCondition.modelViewEntity.getEntityName() + "]: Could not find an entity operator for the name: " + operator);
+            }
+            String relEntityAlias = conditionExpr.getString("relEntityAlias");
+            String relFieldNameStr = conditionExpr.getString("relFieldName");
+            if (UtilValidate.isEmpty(relFieldNameStr)) {
+                this.relFieldName = null;
+            } else {
+                this.relFieldName = relFieldNameStr;
+            }
+            String valueStr = conditionExpr.getString("fieldValue");
+            if (UtilValidate.isEmpty(valueStr)) {
+                this.value = null;
+            } else {
+                this.value = valueStr;
+            }
+            this.ignoreCase = conditionExpr.getBoolean("ignoreCase");
+
+            // if we are in a view-link, default to the entity-alias and rel-entity-alias there
+            if (this.viewEntityCondition.modelViewLink != null) {
+                if (UtilValidate.isEmpty(entityAlias)) {
+                    entityAlias = this.viewEntityCondition.modelViewLink.getEntityAlias();
+                }
+                if (UtilValidate.isEmpty(relEntityAlias)) {
+                    relEntityAlias = this.viewEntityCondition.modelViewLink.getRelEntityAlias();
+                }
+            }
+            this.entityAlias = entityAlias;
+            this.relEntityAlias = relEntityAlias;
+        }
 
         // TODO: add programatic constructor
         public ViewConditionExpr(ViewEntityCondition viewEntityCondition, Element conditionExprElement) {
@@ -1456,6 +1571,38 @@ public class ModelViewEntity extends ModelEntity {
         public final List<ViewCondition> conditionList = new LinkedList<>();
         public final EntityJoinOperator operator;
 
+        // fix for upgrade
+        // Added by tong
+        public ViewConditionList(ViewEntityCondition viewEntityCondition, GenericValue conditionListGv) {
+            this.viewEntityCondition = viewEntityCondition;
+            String combine = conditionListGv.getString("combine");
+            try {
+                this.operator = EntityOperator.lookupJoin(combine);
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("[" + this.viewEntityCondition.modelViewEntity.getEntityName() + "]: Could not find an entity operator for the name: " + combine);
+            }
+            List<GenericValue> conditionExprs = null;
+            List<GenericValue> childConditionListGvs = null;
+            try {
+				conditionExprs = conditionListGv.getRelated("ConditionExpr", null, null, true);
+	            childConditionListGvs = conditionListGv.getRelated("ChildConditionList", null, null, true);
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+            
+            if (UtilValidate.isNotEmpty(conditionExprs)) {
+	            for (GenericValue conditionExpr:conditionExprs) {
+	            	conditionList.add(new ViewConditionExpr(this.viewEntityCondition, conditionExpr));
+	            }
+            }
+            
+            if (UtilValidate.isNotEmpty(childConditionListGvs)) {
+	            for (GenericValue childConditionListGv:childConditionListGvs) {
+	            	conditionList.add(new ViewConditionList(this.viewEntityCondition, childConditionListGv));
+	            }
+            }
+        }
+        
         public ViewConditionList(ViewEntityCondition viewEntityCondition, Element conditionListElement) {
             this.viewEntityCondition = viewEntityCondition;
             String combine = conditionListElement.getAttribute("combine");
