@@ -1,0 +1,3 @@
+[submodule "plugins/odata"]
+	path = plugins/odata
+	url = https://code.aliyun.com/dpbird/odata.git
