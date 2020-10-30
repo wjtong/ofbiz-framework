@@ -1,3 +1,9 @@
 [submodule "plugins/odata"]
 	path = plugins/odata
 	url = https://code.aliyun.com/dpbird/odata.git
+[submodule "plugins/basecamp"]
+	path = plugins/basecamp
+	url = https://code.aliyun.com/dpbird/basecamp.git
+[submodule "plugins/ui5"]
+	path = plugins/ui5
+	url = https://code.aliyun.com/dpbird/ui5.git
