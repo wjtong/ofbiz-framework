@@ -42,6 +42,7 @@ import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.condition.EntityComparisonOperator;
 import org.apache.ofbiz.entity.condition.EntityCondition;
 import org.apache.ofbiz.entity.condition.EntityConditionValue;
+import org.apache.ofbiz.entity.condition.EntityExpr;
 import org.apache.ofbiz.entity.condition.EntityFieldValue;
 import org.apache.ofbiz.entity.condition.EntityFunction;
 import org.apache.ofbiz.entity.condition.EntityJoinOperator;
@@ -1330,7 +1331,23 @@ public class ModelViewEntity extends ModelEntity {
             this.havingCondition = havingCond;
         }
 
-        // TODO: add programatic constructor
+        // Added by Tong
+        //TODO need to finish in real circumenstance 
+        public ViewEntityCondition(ModelViewEntity modelViewEntity, ModelViewLink modelViewLink, boolean filterByDate,
+				boolean distinct, List<String> orderByList, String entityAlias, String relEntityAlias, EntityCondition entityCondition) {
+			super();
+			this.modelViewEntity = modelViewEntity;
+			this.modelViewLink = modelViewLink;
+			this.filterByDate = filterByDate;
+			this.distinct = distinct;
+			this.orderByList = orderByList;
+			this.havingCondition = null;
+			EntityExpr entityExpr = (EntityExpr) entityCondition;
+			this.whereCondition = new ViewConditionExpr(this, entityAlias, ((EntityFieldValue) entityExpr.getLhs()).getFieldName(), (EntityComparisonOperator) entityExpr.getOperator(),
+					relEntityAlias, null, entityExpr.getRhs(), true);
+		}
+
+		// TODO: add programatic constructor
         public ViewEntityCondition(ModelViewEntity modelViewEntity, ModelViewLink modelViewLink, Element element) {
             this.modelViewEntity = modelViewEntity;
             this.modelViewLink = modelViewLink;
@@ -1449,7 +1466,22 @@ public class ModelViewEntity extends ModelEntity {
             this.relEntityAlias = relEntityAlias;
         }
 
-        // TODO: add programatic constructor
+        // Added by Tong
+        public ViewConditionExpr(ViewEntityCondition viewEntityCondition, String entityAlias, String fieldName,
+				EntityComparisonOperator<?, ?> operator, String relEntityAlias, String relFieldName, Object value,
+				boolean ignoreCase) {
+			super();
+			this.viewEntityCondition = viewEntityCondition;
+			this.entityAlias = entityAlias;
+			this.fieldName = fieldName;
+			this.operator = operator;
+			this.relEntityAlias = relEntityAlias;
+			this.relFieldName = relFieldName;
+			this.value = value;
+			this.ignoreCase = ignoreCase;
+		}
+
+		// TODO: add programatic constructor
         public ViewConditionExpr(ViewEntityCondition viewEntityCondition, Element conditionExprElement) {
             this.viewEntityCondition = viewEntityCondition;
             String entityAlias = conditionExprElement.getAttribute("entity-alias");
