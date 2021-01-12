@@ -140,8 +140,8 @@ dependencies {
     compile 'org.apache.httpcomponents:httpclient-cache:4.5.4'
     compile 'org.apache.logging.log4j:log4j-api:2.10.0' // the API of log4j 2
     compile 'org.apache.shiro:shiro-core:1.4.0'
-    compile 'org.apache.tika:tika-core:1.20'
-    compile 'org.apache.tika:tika-parsers:1.20'
+    compile 'org.apache.tika:tika-core:1.24.1'
+    compile 'org.apache.tika:tika-parsers:1.24.1'
     compile 'org.apache.poi:poi:3.17'
     compile 'org.apache.tomcat:tomcat-catalina-ha:9.0.36'
     compile 'org.apache.tomcat:tomcat-catalina:9.0.36'
@@ -159,6 +159,9 @@ dependencies {
     compile 'oro:oro:2.0.8'
     compile 'wsdl4j:wsdl4j:1.6.3'
     compile 'org.jsoup:jsoup:1.11.2'
+    compile 'net.lingala.zip4j:zip4j:2.6.4'
+    compile 'org.apache.commons:commons-imaging:1.0-alpha2' // Alpha but OK, "Imaging was working and was used by a number of projects in production even before reaching its initial release as an Apache Commons component."
+    compile 'batik:batik-svg-dom:1.6-1'
 
     // ofbiz unit-test compile libs
     testCompile 'org.mockito:mockito-core:2.+'
@@ -1157,4 +1160,13 @@ def gradlewSubprocess(commandList) {
     def fullCommand = [gradleRunner, "--no-daemon"]
     fullCommand.addAll(commandList)
     exec { commandLine fullCommand }
+}
+
+
+def gradle = project.getGradle()
+new File("${gradle.getGradleUserHomeDir().getAbsolutePath()}/daemon/${gradle.getGradleVersion()}").listFiles().each {
+    if (it.getName().endsWith('.out.log')) {
+        logger.debug("Cleaning up daemon log file $it")
+        it.delete()
+    }
 }
