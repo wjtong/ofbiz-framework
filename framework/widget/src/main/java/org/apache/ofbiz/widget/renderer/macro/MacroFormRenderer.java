@@ -22,9 +22,14 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.net.URLEncoder;
 import java.rmi.server.UID;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -2834,7 +2839,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
     }
 
-    public void renderSortField(Appendable writer, Map<String, Object> context, ModelFormField modelFormField, String titleText) {
+    public void renderSortField(Appendable writer, Map<String, Object> context, ModelFormField modelFormField, String titleText)
+            throws UnsupportedEncodingException {
         boolean ajaxEnabled = false;
         ModelForm modelForm = modelFormField.getModelForm();
         List<ModelForm.UpdateArea> updateAreas = modelForm.getOnSortColumnUpdateAreas();
@@ -2894,7 +2900,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             }
             String newQueryString = sb.toString();
             String urlPath = UtilHttp.removeQueryStringFromTarget(paginateTarget);
-            linkUrl = rh.makeLink(this.request, this.response, urlPath.concat(newQueryString));
+            linkUrl = rh.makeLink(this.request, this.response, urlPath.concat(URLEncoder.encode(newQueryString, "UTF-8")));
         }
         StringWriter sr = new StringWriter();
         sr.append("<@renderSortField ");
@@ -2902,7 +2908,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(sortFieldStyle);
         sr.append("\" title=\"");
         sr.append(titleText);
-        sr.append("\" linkUrl=r\"");
+        sr.append("\" linkUrl=\"");
         sr.append(linkUrl);
         sr.append("\" ajaxEnabled=");
         sr.append(Boolean.toString(ajaxEnabled));
@@ -3087,7 +3093,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
     public void makeHyperlinkByType(Appendable writer, String linkType, String linkStyle, String targetType, String target, Map<String, String> parameterMap, String description, String targetWindow, String confirmation, ModelFormField modelFormField, HttpServletRequest request,
             HttpServletResponse response, Map<String, Object> context) throws IOException {
         String realLinkType = WidgetWorker.determineAutoLinkType(linkType, target, targetType, request);
-        String encodedDescription = encode(description, modelFormField, context);
+        String encodedDescription = internalEncoder.encode(description);
         // get the parameterized pagination index and size fields
         int paginatorNumber = WidgetWorker.getPaginatorNumber(context);
         ModelForm modelForm = modelFormField.getModelForm();
