@@ -378,7 +378,10 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="workEffortId"><hidden/></field>
+        <!-- Commenting this field for now as the form widget cannot override useWhen fields from
+             the form it is extending (results in two workEffortId fields in the form)
+         <field name="workEffortId"><hidden value=""/></field>
+        -->
         <field name="workEffortAssocTypeId" map-name="workEffortAssoc">
             <display-entity entity-name="WorkEffortAssocType"/>
         </field>
@@ -400,7 +403,7 @@ under the License.
     <form name="ListWorkEfforts" type="list" list-name="listIt" paginate-target="ListWorkEfforts" 
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <actions>
-            <set field="fieldList" value="${groovy:['workEffortId','workEffortTypeId','currentStatusId','workEffortPurposeTypeId','description','priority','lastModifiedDate','estimatedStartDate','estimatedCompletionDate','actualStartDate','actualCompletionDate']}" type="List"/>
+            <set field="fieldList" value="${groovy:['workEffortId','workEffortName','workEffortTypeId','currentStatusId','workEffortPurposeTypeId','description','priority','lastModifiedDate','estimatedStartDate','estimatedCompletionDate','actualStartDate','actualCompletionDate']}" type="List"/>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
                 <field-map field-name="entityName" value="WorkEffortFindView"/>
@@ -1458,7 +1461,7 @@ under the License.
         <field name="facilityId"><ignored/></field>
         <field name="mustRsvp"><ignored/></field>
     </form>
- 
+
     <form name="ListIcalendars" list-name="listIt" type="list"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
