@@ -39,14 +39,7 @@ import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.base.util.UtilXml;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
-import org.apache.ofbiz.entity.condition.EntityComparisonOperator;
-import org.apache.ofbiz.entity.condition.EntityCondition;
-import org.apache.ofbiz.entity.condition.EntityConditionValue;
-import org.apache.ofbiz.entity.condition.EntityExpr;
-import org.apache.ofbiz.entity.condition.EntityFieldValue;
-import org.apache.ofbiz.entity.condition.EntityFunction;
-import org.apache.ofbiz.entity.condition.EntityJoinOperator;
-import org.apache.ofbiz.entity.condition.EntityOperator;
+import org.apache.ofbiz.entity.condition.*;
 import org.apache.ofbiz.entity.jdbc.SqlJdbcUtil;
 import org.apache.ofbiz.entity.util.EntityUtil;
 import org.w3c.dom.Element;
@@ -1342,9 +1335,16 @@ public class ModelViewEntity extends ModelEntity {
 			this.distinct = distinct;
 			this.orderByList = orderByList;
 			this.havingCondition = null;
-			EntityExpr entityExpr = (EntityExpr) entityCondition;
-			this.whereCondition = new ViewConditionExpr(this, entityAlias, ((EntityFieldValue) entityExpr.getLhs()).getFieldName(), (EntityComparisonOperator) entityExpr.getOperator(),
-					relEntityAlias, null, entityExpr.getRhs(), true);
+			if (entityCondition instanceof EntityExpr) {
+                EntityExpr entityExpr = (EntityExpr) entityCondition;
+                this.whereCondition = new ViewConditionExpr(this, entityAlias, ((EntityFieldValue) entityExpr.getLhs()).getFieldName(), (EntityComparisonOperator) entityExpr.getOperator(),
+                        relEntityAlias, null, entityExpr.getRhs(), true);
+            } else if (entityCondition instanceof EntityConditionList) {
+			    EntityConditionList entityConditionList = (EntityConditionList) entityCondition;
+			    this.whereCondition = new ViewConditionList(this, entityAlias, relEntityAlias, entityConditionList);
+            } else {
+			    this.whereCondition = null;
+            }
 		}
 
 		// TODO: add programatic constructor
@@ -1634,7 +1634,27 @@ public class ModelViewEntity extends ModelEntity {
 	            }
             }
         }
-        
+
+        // Added by tong
+        public ViewConditionList(ViewEntityCondition viewEntityCondition, String entityAlias, String relEntityAlias, EntityConditionList entityConditionList) {
+            this.viewEntityCondition = viewEntityCondition;
+            this.operator = entityConditionList.getOperator();
+            int conditionListSize = entityConditionList.getConditionListSize();
+            for (int i = 0; i < conditionListSize; i++) {
+                EntityCondition entityCondition = entityConditionList.getCondition(i);
+                if (entityCondition instanceof EntityExpr) {
+                    EntityExpr entityExpr = (EntityExpr) entityCondition;
+                    ViewConditionExpr viewConditionExpr = new ViewConditionExpr(viewEntityCondition, entityAlias, ((EntityFieldValue) entityExpr.getLhs()).getFieldName(), (EntityComparisonOperator) entityExpr.getOperator(),
+                            relEntityAlias, null, entityExpr.getRhs(), true);
+                    this.conditionList.add(viewConditionExpr);
+                } else if (entityCondition instanceof EntityConditionList) {
+                    EntityConditionList innerEntityConditionList = (EntityConditionList) entityCondition;
+                    ViewConditionList viewConditionList = new ViewConditionList(this.viewEntityCondition, entityAlias, relEntityAlias, innerEntityConditionList);
+                    this.conditionList.add(viewConditionList);
+                }
+            }
+        }
+
         public ViewConditionList(ViewEntityCondition viewEntityCondition, Element conditionListElement) {
             this.viewEntityCondition = viewEntityCondition;
             String combine = conditionListElement.getAttribute("combine");
