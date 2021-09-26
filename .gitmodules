@@ -4,3 +4,6 @@
 [submodule "plugins/odata"]
 	path = plugins/odata
 	url = https://gitee.com/cloudlakenet/odata-plugin
+[submodule "plugins/tradeunion"]
+	path = plugins/tradeunion
+	url = https://gitee.com/cloudlakenet/tradeunion
