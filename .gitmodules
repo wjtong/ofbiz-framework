@@ -7,3 +7,6 @@
 [submodule "plugins/tradeunion"]
 	path = plugins/tradeunion
 	url = https://gitee.com/cloudlakenet/tradeunion
+[submodule "plugins/wechat"]
+	path = plugins/wechat
+	url = https://gitee.com/cloudlakenet/wechat-plugin.git
