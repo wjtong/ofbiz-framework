@@ -13,9 +13,3 @@
 [submodule "plugins/alioss"]
 	path = plugins/alioss
 	url = https://gitee.com/cloudlakenet/alioss-plugin
-[submodule "plugins/alioss-plugin"]
-	path = plugins/alioss-plugin
-	url = https://gitee.com/cloudlakenet/alioss-plugin
-[submodule "alioss-plugin"]
-	path = alioss-plugin
-	url = https://gitee.com/cloudlakenet/alioss-plugin
