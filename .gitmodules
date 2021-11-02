@@ -1,18 +1,12 @@
+[submodule "plugins/activiti"]
+	path = plugins/activiti
+	url = https://gitee.com/cloudlakenet/activiti-plugin.git
 [submodule "plugins/odata"]
 	path = plugins/odata
-	url = https://code.aliyun.com/dpbird/odata.git
-[submodule "plugins/basecamp"]
-	path = plugins/basecamp
-	url = https://code.aliyun.com/dpbird/basecamp.git
-[submodule "plugins/ui5"]
-	path = plugins/ui5
-	url = https://code.aliyun.com/dpbird/ui5.git
-[submodule "wechat"]
-	path = wechat
-	url = https://codeup.aliyun.com/5f1938635fd102f22f6b853c/O3APP/wechat.git
+	url = https://gitee.com/cloudlakenet/odata-plugin
 [submodule "plugins/wechat"]
 	path = plugins/wechat
-	url = https://codeup.aliyun.com/5f1938635fd102f22f6b853c/O3APP/wechat.git
+	url = https://gitee.com/cloudlakenet/wx-plugin.git
 [submodule "plugins/alioss"]
 	path = plugins/alioss
-	url = https://codeup.aliyun.com/5f1938635fd102f22f6b853c/O3APP/alioss.git
+	url = https://gitee.com/cloudlakenet/alioss-plugin
