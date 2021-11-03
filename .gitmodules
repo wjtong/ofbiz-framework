@@ -10,3 +10,6 @@
 [submodule "plugins/alioss"]
 	path = plugins/alioss
 	url = https://gitee.com/cloudlakenet/alioss-plugin
+[submodule "plugins/pms"]
+	path = plugins/pms
+	url = https://gitee.com/cloudlakenet/pms30.git
