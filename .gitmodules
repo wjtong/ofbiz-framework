@@ -19,3 +19,6 @@
 [submodule "plugins/activiti"]
 	path = plugins/activiti
 	url = https://gitee.com/cloudlakenet/activiti-plugin.git
+[submodule "plugins/nbwms"]
+	path = plugins/nbwms
+	url = https://gitee.com/cloudlakenet/nbwms.git
