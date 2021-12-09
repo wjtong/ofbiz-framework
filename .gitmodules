@@ -16,3 +16,6 @@
 [submodule "plugins/alioss"]
 	path = plugins/alioss
 	url = https://codeup.aliyun.com/5f1938635fd102f22f6b853c/O3APP/alioss.git
+[submodule "plugins/activiti"]
+	path = plugins/activiti
+	url = https://gitee.com/cloudlakenet/activiti-plugin.git
