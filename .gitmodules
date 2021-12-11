@@ -19,3 +19,6 @@
 [submodule "plugins/ums"]
 	path = plugins/ums
 	url = https://gitee.com/cloudlakenet/ums-plugin.git
+[submodule "plugins/pms"]
+	path = plugins/pms
+	url = https://gitee.com/cloudlakenet/pms-plugin.git
