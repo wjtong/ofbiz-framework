@@ -25,3 +25,6 @@
 [submodule "plugins/gbmsmqtt"]
 	path = plugins/gbmsmqtt
 	url = https://gitee.com/cloudlakenet/gbms-mqtt-plugin.git
+[submodule "plugins/smaug"]
+	path = plugins/smaug
+	url = https://gitee.com/cloudlakenet/smaug-plugin.git
