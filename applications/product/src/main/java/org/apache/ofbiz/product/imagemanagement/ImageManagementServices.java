@@ -27,6 +27,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -149,15 +152,19 @@ public class ImageManagementServices {
             }
 
             if (UtilValidate.isEmpty(imageResize)) {
-                // Create image file original to folder product id.
+                // check file content
                 try {
-                    RandomAccessFile out = new RandomAccessFile(file, "rw");
-                    out.write(imageData.array());
-                    out.close();
-                    if (!org.apache.ofbiz.security.SecuredUpload.isValidFile(fileToCheck, "Image", delegator)) {
+                    Path tempFile = Files.createTempFile(null, null);
+                    Files.write(tempFile, imageData.array(), StandardOpenOption.APPEND);
+                    if (!org.apache.ofbiz.security.SecuredUpload.isValidFile(tempFile.toString(), "Image", delegator)) {
                         String errorMessage = UtilProperties.getMessage("SecurityUiLabels", "SupportedImageFormats", locale);
                         return ServiceUtil.returnError(errorMessage);
                     }
+                    Files.delete(tempFile);
+                    // Create image file original to folder product id.
+                    RandomAccessFile out = new RandomAccessFile(file, "rw");
+                    out.write(imageData.array());
+                    out.close();
                 } catch (FileNotFoundException e) {
                     Debug.logError(e, module);
                     return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
@@ -175,14 +182,16 @@ public class ImageManagementServices {
                 fileOriginal = checkExistsImage(fileOriginal);
 
                 try {
-                    RandomAccessFile outFile = new RandomAccessFile(fileOriginal, "rw");
-                    outFile.write(imageData.array());
-                    outFile.close();
-                    if (!org.apache.ofbiz.security.SecuredUpload.isValidFile(fileToCheck, "Image", delegator)) {
+                    Path tempFile = Files.createTempFile(null, null);
+                    Files.write(tempFile, imageData.array(), StandardOpenOption.APPEND);
+                    if (!org.apache.ofbiz.security.SecuredUpload.isValidFile(tempFile.toString(), "Image", delegator)) {
                         String errorMessage = UtilProperties.getMessage("SecurityUiLabels", "SupportedImageFormats", locale);
                         return ServiceUtil.returnError(errorMessage);
                     }
-
+                    Files.delete(tempFile);
+                    RandomAccessFile outFile = new RandomAccessFile(fileOriginal, "rw");
+                    outFile.write(imageData.array());
+                    outFile.close();
                 } catch (FileNotFoundException e) {
                     Debug.logError(e, module);
                     return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
@@ -529,14 +538,16 @@ public class ImageManagementServices {
         String fileToCheck = imageServerPath + "/" + productId + "/" + filenameToUseThumb;
         File fileOriginalThumb = new File(fileToCheck);
         try {
-            RandomAccessFile outFileThumb = new RandomAccessFile(fileOriginalThumb, "rw");
-            outFileThumb.write(imageData.array());
-            outFileThumb.close();
-            if (!org.apache.ofbiz.security.SecuredUpload.isValidFile(fileToCheck, "Image", delegator)) {
+            Path tempFile = Files.createTempFile(null, null);
+            Files.write(tempFile, imageData.array(), StandardOpenOption.APPEND);
+            if (!org.apache.ofbiz.security.SecuredUpload.isValidFile(tempFile.toString(), "Image", delegator)) {
                 String errorMessage = UtilProperties.getMessage("SecurityUiLabels", "SupportedImageFormats", locale);
                 return ServiceUtil.returnError(errorMessage);
             }
-
+            Files.delete(tempFile);
+            RandomAccessFile outFileThumb = new RandomAccessFile(fileOriginalThumb, "rw");
+            outFileThumb.write(imageData.array());
+            outFileThumb.close();
         } catch (FileNotFoundException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,

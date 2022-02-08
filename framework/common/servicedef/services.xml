@@ -19,7 +19,7 @@ under the License.
 -->
 
 <services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+        xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/services.xsd">
     <description>Common Application Services</description>
     <vendor>OFBiz</vendor>
     <version>1.0</version>
@@ -437,7 +437,7 @@ under the License.
         <attribute name="feedType" type="String" mode="IN" optional="false"/>
         <attribute name="mainLink" type="String" mode="IN" optional="false"/>
         <attribute name="entryLink" type="String" mode="IN" optional="false"/>
-        <attribute name="wireFeed" type="com.sun.syndication.feed.WireFeed" mode="OUT" optional="false"/>
+        <attribute name="wireFeed" type="com.rometools.rome.feed.WireFeed" mode="OUT" optional="false"/>
     </service>
 
     <!-- User preferences services -->

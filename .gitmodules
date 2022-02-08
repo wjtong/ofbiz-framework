@@ -19,3 +19,6 @@
 [submodule "plugins/nbwms"]
 	path = plugins/nbwms
 	url = https://wenjitong:cbb06cf52583db516577c2bb6e3a2b05@gitee.com/cloudlakenet/nbwms.git
+[submodule "plugins/alioss"]
+	path = plugins/alioss
+	url = https://codeup.aliyun.com/5f1938635fd102f22f6b853c/O3APP/alioss.git
