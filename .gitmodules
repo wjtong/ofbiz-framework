@@ -28,3 +28,6 @@
 [submodule "plugins/smaug"]
 	path = plugins/smaug
 	url = https://gitee.com/cloudlakenet/smaug-plugin.git
+[submodule "plugins/edi"]
+	path = plugins/edi
+	url = https://gitee.com/cloudlakenet/edi-plugin.git
