@@ -193,7 +193,7 @@ under the License.
         <attribute name="message" type="String" mode="IN"/>
     </service>
 
-    <service name="testJMSTopic" engine="jms" location="serviceMessenger" invoke="testScv">
+    <service name="testJMSTopic" engine="jms" location="topicMessenger" invoke="testScv">
         <description>Test JMS Topic service</description>
         <attribute name="message" type="String" mode="IN"/>
     </service>
