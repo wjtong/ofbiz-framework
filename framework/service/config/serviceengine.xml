@@ -53,7 +53,8 @@ under the License.
         <!--  -->
         <engine name="route" class="org.apache.ofbiz.service.engine.RouteEngine"/>
         <!-- <engine name="http" class="org.apache.ofbiz.service.engine.HttpEngine"/> -->
-        <engine name="jms" class="com.banfftech.gbms.jms.GBMSJmsServiceEngine"/>
+        <engine name="jms" class="org.apache.ofbiz.service.jms.JmsServiceEngine"/>
+        <engine name="gbmsjms" class="com.banfftech.gbms.jms.GBMSJmsServiceEngine"/>
         <engine name="rmi" class="org.apache.ofbiz.service.rmi.RmiServiceEngine"/>
         <!-- <engine name="soap" class="org.apache.ofbiz.service.engine.SOAPClientEngine"/> -->
         <!-- The engine xml-rpc-local is only used by a test service and for this reason it is configured to run on port 8080.
