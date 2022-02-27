@@ -343,7 +343,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
         <!-- beware use-indices-unique="false" is needed because of Derby bug with null values in a unique index -->
         <inline-jdbc
                 jdbc-driver="org.apache.derby.jdbc.EmbeddedDriver"
-                jdbc-uri="jdbc:derby:ofbizstats;create=true"
+                jdbc-uri="jdbc:derby:memory:ofbizstats;create=true"
                 jdbc-username="ofbiz"
                 jdbc-password-lookup="derby-ofbiz"
                 isolation-level="ReadCommitted"
