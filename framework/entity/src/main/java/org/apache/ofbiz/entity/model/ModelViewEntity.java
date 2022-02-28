@@ -1325,7 +1325,7 @@ public class ModelViewEntity extends ModelEntity {
         }
 
         // Added by Tong
-        //TODO need to finish in real circumenstance 
+        //TODO need to finish in real circumenstance
         public ViewEntityCondition(ModelViewEntity modelViewEntity, ModelViewLink modelViewLink, boolean filterByDate,
 				boolean distinct, List<String> orderByList, String entityAlias, String relEntityAlias, EntityCondition entityCondition) {
 			super();
