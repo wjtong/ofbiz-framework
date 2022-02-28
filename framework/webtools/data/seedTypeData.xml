@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<entity-engine-xml>
+
+
+<!-- 枚举类型 -->
+<EnumerationType enumTypeId="POWER_GRID" hasTable="N" description="电力"/>
+<EnumerationType enumTypeId="COST_COLLECTION_TYPE" parentTypeId="POWER_GRID" hasTable="N" description="成本归集类型"/>
+<EnumerationType enumTypeId="DEMAND_YRAN" parentTypeId="POWER_GRID" hasTable="N" description="需求年度"/>
+<!-- <EnumerationType enumTypeId="FEASIBILITY_STUDY_APPROVAL_UNIT" parentTypeId="POWER_GRID" hasTable="N" description="可研批复单位"/> -->
+<!-- <EnumerationType enumTypeId="KEY_PROJECTS" parentTypeId="POWER_GRID" hasTable="N" description="是否重点项目"/> -->
+<EnumerationType enumTypeId="LINE_TYPE" parentTypeId="POWER_GRID" hasTable="N" description="线路类型"/>
+<EnumerationType enumTypeId="MAINTENANCE_PURPOSE" parentTypeId="POWER_GRID" hasTable="N" description="大修目的"/>
+<EnumerationType enumTypeId="NATURE_ASSETS" parentTypeId="POWER_GRID" hasTable="N" description="资产性质"/>
+<EnumerationType enumTypeId="PROFESSIONAL_SUBDIVIDE" parentTypeId="POWER_GRID" hasTable="N" description="专业细分"/>
+<EnumerationType enumTypeId="PROFESSIONAL_TYPE" parentTypeId="POWER_GRID" hasTable="N" description="专业类型"/>
+<!-- <EnumerationType enumTypeId="SPECIAL_OR_NOT" parentTypeId="POWER_GRID" hasTable="N" description="是否专项"/> -->
+<!-- <EnumerationType enumTypeId="TECHNICAL_SUPPORT" parentTypeId="POWER_GRID" hasTable="N" description="是否技术支撑"/> -->
+<!-- <EnumerationType enumTypeId="UNIFIED_PUSH_OR_NOT" parentTypeId="POWER_GRID" hasTable="N" description="是否统推"/> -->
+<!-- <EnumerationType enumTypeId="VOLTAGE_GRADE" parentTypeId="POWER_GRID" hasTable="N" description="电压等级"/> -->
+
+
+
+<!-- FacilityType -->
+<FacilityType facilityTypeId="STATION_LINE" hasTable="N" description="电力站线"/>
+<FacilityType facilityTypeId="STATION" parentTypeId="STATION_LINE" hasTable="N" description="站"/>
+<FacilityType facilityTypeId="LINE" parentTypeId="STATION_LINE" hasTable="N" description="线"/>
+<FacilityType facilityTypeId="TRANSFORMER_SUBSTATION" parentTypeId="STATION" hasTable="N" description="变电站" />
+<FacilityType facilityTypeId="CONVERTER_STATION" parentTypeId="STATION" hasTable="N" description="交流站" />
+
+<!-- ProductFeatureType -->
+<ProductFeatureType productFeatureTypeId="POWER_GRID" hasTable="N" description="电力特征"/>
+<ProductFeatureType productFeatureTypeId="VOLTAGE_LEVEL" parentTypeId="POWER_GRID" hasTable="N" description="电压等级"/>
+<ProductFeatureType productFeatureTypeId="RECYCLED_Y" parentTypeId="POWER_GRID" hasTable="N" description="回收"/>
+<ProductFeatureType productFeatureTypeId="RECYCLED_N" parentTypeId="POWER_GRID" hasTable="N" description="不回收"/>
+
+<!-- ProductFeatureCategory -->
+<ProductFeatureCategory productFeatureCategoryId="VOLTAGE_LEVEL_CAT" description="电压等级分类"/>
+
+<!-- ProductMaintType -->
+<ProductMaintType productMaintTypeId="POWER_GRID" description="电力作业" />
+
+<!-- RoleType -->
+<RoleType roleTypeId="PROVINCE_COMPANY" parentTypeId="DIVISION" hasTable="N" description="省公司" />
+<RoleType roleTypeId="CITY_COMPANY" parentTypeId="DIVISION" hasTable="N" description="市公司" />
+<RoleType roleTypeId="COUNTY_COMPANY" parentTypeId="DIVISION" hasTable="N" description="县公司" />
+<RoleType roleTypeId="DIRECTLYUNDER_COMPANY" parentTypeId="DIVISION" hasTable="N" description="直属公司" />
+<RoleType roleTypeId="WORKAREA_COMPANY" parentTypeId="DIVISION" hasTable="N" description="工区" />
+<RoleType roleTypeId="APPROVER" description="Approver"/>
+<RoleType roleTypeId="REVIEWER" description="Reviewer"/>
+
+<!-- GoodIdentificationType -->
+<GoodIdentificationType goodIdentificationTypeId="INTERNAL_ID" hasTable="N" description="内部编码" />
+<GoodIdentificationType goodIdentificationTypeId="INTERNAL_CODE" hasTable="N" description="内部系统ID" />
+
+<!--PartyIdentificationType-->
+<PartyIdentificationType partyIdentificationTypeId="INTERNAL_ID" hasTable="N" description="内部编码" />
+<PartyIdentificationType partyIdentificationTypeId="COMPANY_ABBREVIATION" hasTable="N" description="公司缩写" />
+
+<!--ProductCategoryType-->
+<ProductCategoryType  productCategoryTypeId="POWER_GRID" hasTable="N" description="电力分类" />
+<ProductCategoryType  productCategoryTypeId="CLASS_A" parentTypeId="POWER_GRID" hasTable="N" description="大类" />
+<ProductCategoryType  productCategoryTypeId="CLASS_B" parentTypeId="POWER_GRID" hasTable="N" description="中类" />
+<ProductCategoryType  productCategoryTypeId="CLASS_C" parentTypeId="POWER_GRID" hasTable="N" description="小类" />
+
+
+<!-- ProductType -->
+<ProductType productTypeId="RECYCLED" hasTable="N" description="回收" />
+
+<!-- CustRequestType -->
+<CustRequestType custRequestTypeId="RF_SHIP_INBOUND" hasTable="N" description="入库请求单" />
+<CustRequestType custRequestTypeId="RF_SHIP_OUTBOUND" hasTable="N" description="出库请求单" />
+
+<!--RequirementType-->
+<RequirementType requirementTypeId="TRANSFER" hasTable="N" description="需求"/>
+
+<!--InventoryItemLabelType-->
+<InventoryItemLabelType inventoryItemLabelTypeId="BARCODE" hasTable="N" description="条形码" />
+
+<!--官方plugin中的类型-->
+<WorkEffortType parentTypeId="TEMPLATE" workEffortTypeId="TASK_TEMPLATE"/>
+</entity-engine-xml>
