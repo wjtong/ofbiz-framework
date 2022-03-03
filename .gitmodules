@@ -25,3 +25,6 @@
 [submodule "plugins/syncdata"]
 	path = plugins/syncdata
 	url = https://codeup.aliyun.com/5f1938635fd102f22f6b853c/dpbird/syncdata.git
+[submodule "plugins/gbmsmqtt"]
+	path = plugins/gbmsmqtt
+	url = https://wenjitong:cbb06cf52583db516577c2bb6e3a2b05@gitee.com/cloudlakenet/gbms-mqtt-plugin.git
