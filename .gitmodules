@@ -28,3 +28,6 @@
 [submodule "plugins/gbmsmqtt"]
 	path = plugins/gbmsmqtt
 	url = https://wenjitong:cbb06cf52583db516577c2bb6e3a2b05@gitee.com/cloudlakenet/gbms-mqtt-plugin.git
+[submodule "plugins/drools"]
+	path = plugins/drools
+	url = https://github.com/wjtong/drools.git
