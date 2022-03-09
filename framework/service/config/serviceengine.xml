@@ -106,23 +106,23 @@ under the License.
                     password="admin"
                     listen="false"/>
         </jms-service>
-        <jms-service name="topicMessenger" send-mode="all">
-            <server jndi-server-name="default"
-                    jndi-name="topicConnectionFactory"
-                    topic-queue="OFBTopic"
-                    type="topic"
-                    username="admin"
-                    password="admin"
-                    listen="true"/>
-        </jms-service>
-        <jms-service name="mqttMessenger" send-mode="all">
-            <server jndi-server-name="default"
-                    jndi-name="topicConnectionFactory"
-                    topic-queue="MqttTopic"
-                    type="topic"
-                    username="admin"
-                    password="admin"
-                    listen="true"/>
-        </jms-service>
+<!--        <jms-service name="topicMessenger" send-mode="all">-->
+<!--            <server jndi-server-name="default"-->
+<!--                    jndi-name="topicConnectionFactory"-->
+<!--                    topic-queue="OFBTopic"-->
+<!--                    type="topic"-->
+<!--                    username="admin"-->
+<!--                    password="admin"-->
+<!--                    listen="true"/>-->
+<!--        </jms-service>-->
+<!--        <jms-service name="mqttMessenger" send-mode="all">-->
+<!--            <server jndi-server-name="default"-->
+<!--                    jndi-name="topicConnectionFactory"-->
+<!--                    topic-queue="MqttTopic"-->
+<!--                    type="topic"-->
+<!--                    username="admin"-->
+<!--                    password="admin"-->
+<!--                    listen="true"/>-->
+<!--        </jms-service>-->
     </service-engine>
 </service-config>
