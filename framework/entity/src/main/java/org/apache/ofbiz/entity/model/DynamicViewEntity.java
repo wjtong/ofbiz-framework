@@ -247,12 +247,6 @@ public class DynamicViewEntity {
         this.aliasAlls.add(aliasAll);
     }
 
-    // Added by Tong
-    public void addAliasAll(String entityAlias, String prefix, Collection<String> excludes, boolean groupBy) {
-        ModelAliasAll aliasAll = new ModelAliasAll(entityAlias, prefix, groupBy, null, null, excludes);
-        this.aliasAlls.add(aliasAll);
-    }
-
     public void addAllAliasAllsToList(List<ModelAliasAll> addList) {
         addList.addAll(this.aliasAlls);
     }
@@ -294,15 +288,6 @@ public class DynamicViewEntity {
         this.viewLinks.add(modelViewLink);
     }
     
-    // Added by Tong
-    public void addViewLink(ModelViewLink modelViewLink) {
-    	this.viewLinks.add(modelViewLink);
-    }
-    // Added by Tong
-    public void addViewLinks(Collection<ModelViewLink> modelViewLinks) {
-    	this.viewLinks.addAll(modelViewLinks);
-    }
-
     // Added by Tong
     public void addViewLink(ModelViewLink modelViewLink) {
     	this.viewLinks.add(modelViewLink);
