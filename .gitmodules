@@ -1,6 +1,3 @@
 [submodule "plugins/odata"]
 	path = plugins/odata
 	url = https://gitee.com/cloudlakenet/odata-plugin
-[submodule "plugins/gbmsmqtt"]
-	path = plugins/gbmsmqtt
-	url = https://gitee.com/cloudlakenet/gbms-mqtt-plugin.git
