@@ -103,7 +103,7 @@ under the License.
 
         <jms-service name="jciPointsReq" send-mode="all">
             <server jndi-server-name="default"
-                    client-id="ofbiz1"
+                    client-id="ofbizSender"
                     jndi-name="topicConnectionFactory"
                     topic-queue="jci.services.points.req"
                     type="topic"
@@ -113,7 +113,7 @@ under the License.
         </jms-service>
         <jms-service name="jciPointsRes" send-mode="all">
             <server jndi-server-name="default"
-                    client-id="ofbiz1"
+                    client-id="ofbizReceiver"
                     jndi-name="topicConnectionFactory"
                     topic-queue="jci.services.points.res"
                     type="topic"

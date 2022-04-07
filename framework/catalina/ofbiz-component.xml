@@ -108,6 +108,7 @@ under the License.
             <property name="xpoweredBy" value="false"/>
             <property name="compression" value="on"/>
             <property name="compressibleMimeType" value="text/html,text/xml,text/plain,text/css,application/javascript,application/json"/>
+            <property name="maxHttpHeaderSize" value="8192"/>
             <!-- commented out because the values match the Tomcat defaults:
             <property name="allowTrace" value="false"/>
             <property name="enableLookups" value="false"/>
@@ -115,7 +116,7 @@ under the License.
             <property name="noCompressionUserAgents" value=""/>
             <property name="connectionLinger" value="-1"/>
             <property name="connectionTimeout" value="60000"/>
-            <property name="maxHttpHeaderSize" value="8192"/>
+
             <property name="maxKeepAliveRequests" value="100"/>
             <property name="maxThreads" value="200"/>
             <property name="minSpareThreads" value="10"/>
