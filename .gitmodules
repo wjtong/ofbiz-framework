@@ -31,3 +31,6 @@
 [submodule "plugins/drools"]
 	path = plugins/drools
 	url = https://github.com/wjtong/drools.git
+[submodule "plugins/tradeunion"]
+	path = plugins/tradeunion
+	url = https://gitee.com/cloudlakenet/tradeunion
