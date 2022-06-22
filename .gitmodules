@@ -1,18 +1,20 @@
 [submodule "plugins/odata"]
 	path = plugins/odata
-	url = https://code.aliyun.com/dpbird/odata.git
+	url = https://codeup.aliyun.com/5f1938635fd102f22f6b853c/dpbird/odata.git
+	branch = master-dev
 [submodule "plugins/basecamp"]
 	path = plugins/basecamp
 	url = https://code.aliyun.com/dpbird/basecamp.git
+	branch = master-dev
 [submodule "plugins/ui5"]
 	path = plugins/ui5
 	url = https://code.aliyun.com/dpbird/ui5.git
-[submodule "wechat"]
-	path = wechat
-	url = https://codeup.aliyun.com/5f1938635fd102f22f6b853c/O3APP/wechat.git
+	branch = master-dev
 [submodule "plugins/wechat"]
 	path = plugins/wechat
 	url = https://codeup.aliyun.com/5f1938635fd102f22f6b853c/O3APP/wechat.git
+	branch = master
 [submodule "plugins/alioss"]
 	path = plugins/alioss
 	url = https://codeup.aliyun.com/5f1938635fd102f22f6b853c/O3APP/alioss.git
+    branch = master
