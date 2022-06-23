@@ -32,4 +32,4 @@ rm -f $OFBIZ_LOG
 # JLR post Gradle comment, not sure this is still true...
 
 # start ofbiz
-(cd "$OFBIZ_HOME" && exec ./gradlew ofbiz -x test)
+(cd /root/ofbiz && exec ./gradlew ofbiz -x test)
