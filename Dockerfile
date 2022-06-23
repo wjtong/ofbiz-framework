@@ -1,4 +1,4 @@
-FROM registry-vpc.cn-hangzhou.aliyuncs.com/dpbird/basecamp:master_new
+FROM registry.cn-hangzhou.aliyuncs.com/dpbird/basecamp:master_new
 
 
 ENV JAVA_HOME=/root/jdk1.8.0_231 \
