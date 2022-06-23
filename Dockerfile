@@ -10,4 +10,4 @@ ENV JAVA_HOME=/root/jdk1.8.0_231 \
 
 COPY ./ /root/ofbiz/
 
-ENTRYPOINT ["/root/ofbiz/tools/startofbiz.sh"]
+ENTRYPOINT ["/root/ofbiz/startofbiz.sh"]
