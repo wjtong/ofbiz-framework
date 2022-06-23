@@ -18,5 +18,5 @@ ADD ofbiz /root/ofbiz
 ADD .gradle /root/.gradle
 #ADD ofbiz_volume/.gradle  /root/ofbiz/.gradle
 ADD startofbiz.sh /root/ofbiz/plugins/basecamp
-ADD GitInfo.ftl /root/ofbiz/runtime
+#ADD GitInfo.ftl /root/ofbiz/runtime
 ENTRYPOINT ["/root/ofbiz/plugins/basecamp/startofbiz.sh"]

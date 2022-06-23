@@ -19,7 +19,7 @@
 #####################################################################
 
 # set the parent directory as OFBiz Home
-OFBIZ_HOME="$( cd -P "$( dirname "$0" )" && pwd )"/..
+OFBIZ_HOME="$( cd -P "$( dirname "$0" )" && pwd )"/../../
 
 # console log file
 OFBIZ_LOG=runtime/logs/console.log
@@ -27,9 +27,17 @@ OFBIZ_LOG=runtime/logs/console.log
 # delete the last log
 rm -f $OFBIZ_LOG
 
+#tail -f /dev/null
 # Allows to run from Jenkins. See http://wiki.jenkins-ci.org/display/JENKINS/ProcessTreeKiller. Cons: the calling Jenkins job does not terminate if the log is not enabled, pros: this allows to monitor the log in Jenkins
 #BUILD_ID=dontKillMe
 # JLR post Gradle comment, not sure this is still true...
 
+#Junit test
+
+#(cd "$OFBIZ_HOME" && exec ./gradlew "ofbiz --test component=basecamp --test case=shoppingcarttests")
+
 # start ofbiz
-(cd /root/ofbiz && exec ./gradlew ofbiz -x test)
+
+#(cd "$OFBIZ_HOME" && exec ./gradlew ofbiz -x test)
+(cd "$OFBIZ_HOME" && exec ./gradlew ofbiz -x test)
+tail -f /dev/null
