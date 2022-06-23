@@ -10,11 +10,6 @@ ENV JAVA_HOME=/root/jdk1.8.0_231 \
 
 COPY ./ /root/ofbiz/
 
-#ADD ./ /root/ofbiz
-#ADD ./.gradle /root/.gradle
-#ADD ofbiz_volume/.gradle  /root/ofbiz/.gradle
-ADD ./startofbiz.sh /root/ofbiz/plugins/basecamp
-#ADD GitInfo.ftl /root/ofbiz/runtime
-RUN ["chmod", "+x", "/root/ofbiz/plugins/basecamp/startofbiz.sh"]
+RUN ["chmod", "+x", "/root/ofbiz/startofbiz.sh"]
 
-ENTRYPOINT ["/root/ofbiz/plugins/basecamp/startofbiz.sh"]
+ENTRYPOINT ["/root/ofbiz/startofbiz.sh"]
