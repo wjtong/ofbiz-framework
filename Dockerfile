@@ -15,7 +15,7 @@ ENV JAVA_HOME=/root/jdk1.8.0_231  \
 #    GitInfo.ftl /root/ofbiz/runtime/
 
 ADD ./ /root/ofbiz
-ADD ./.gradle /root/.gradle
+#ADD ./.gradle /root/.gradle
 #ADD ofbiz_volume/.gradle  /root/ofbiz/.gradle
 ADD ./startofbiz.sh /root/ofbiz/plugins/basecamp
 #ADD GitInfo.ftl /root/ofbiz/runtime
