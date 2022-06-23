@@ -18,8 +18,6 @@
 # under the License.
 #####################################################################
 
-# set the parent directory as OFBiz Home
-OFBIZ_HOME="$( cd -P "$( dirname "$0" )" && pwd )"/..
 
 # console log file
 OFBIZ_LOG=runtime/logs/console.log
@@ -39,5 +37,4 @@ rm -f $OFBIZ_LOG
 # start ofbiz
 
 #(cd "$OFBIZ_HOME" && exec ./gradlew ofbiz -x test)
-(cd "$OFBIZ_HOME" && exec ./gradlew ofbiz -x test)
-tail -f /dev/null
+(cd /root/ofbiz && exec ./gradlew ofbiz -x test)
