@@ -10,4 +10,6 @@ ENV JAVA_HOME=/root/jdk1.8.0_231 \
 
 COPY ./ /root/ofbiz/
 
+RUN ["chmod", "+x", "/root/ofbiz/startofbiz.sh"]
+
 ENTRYPOINT ["/root/ofbiz/startofbiz.sh"]
