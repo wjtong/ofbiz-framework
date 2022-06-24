@@ -1,5 +1,10 @@
 FROM registry.cn-hangzhou.aliyuncs.com/dpbird/basecamp:Centos7.9_jdk8
 
+ARG branch
+
+ARG tag_ID
+
+ARG source_Name
 
 ENV JAVA_HOME=/root/jdk1.8.0_231 \
     PATH=$PATH:$JAVA_HOME/bin \
