@@ -1,0 +1,38 @@
+version: "2" 
+
+networks:
+  network_1:
+services:
+  o3:
+    image: "registry-vpc.cn-hangzhou.aliyuncs.com/dpbird/o3-ui5:master_new"
+    networks:
+      - network_1
+    ports:
+      - 80:80
+    depends_on:
+      - gbms
+    volumes:
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m" 
+  gbms:
+    image: "registry-vpc.cn-hangzhou.aliyuncs.com/banff/gbms:latest"
+    networks:
+       - network_1
+    ports:
+       - 8080:8080
+    volumes:
+       - "/opt/o3/ofbiz_volume/config/entityengine.xml:/root/ofbiz/framework/entity/config/entityengine.xml"
+       - "/opt/o3/ofbiz_volume/config/general.properties:/root/ofbiz/framework/common/config/general.properties"
+       - "/opt/o3/ofbiz_volume/logs:/root/ofbiz/runtime/logs"
+       - "/opt/o3/ofbiz_volume/port_config/ofbiz-component.xml:/root/ofbiz/framework/catalina/ofbiz-component.xml"
+       - "/opt/o3/ofbiz_volume/port_config/url.properties:/root/ofbiz/framework/webapp/config/url.properties"
+       - "/opt/o3/ofbiz_volume/log_config/log4j2.xml:/root/ofbiz/framework/base/config/log4j2.xml"
+       - "/opt/o3/ofbiz_volume/port_config/security.properties:/root/ofbiz/framework/security/config/security.properties"
+       - "/opt/o3/ofbiz_volume/.gradle:/root/.gradle"
+       - "/opt/o3/ofbiz_volume/data:/root/ofbiz/runtime/data"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
