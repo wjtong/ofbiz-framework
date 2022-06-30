@@ -14,7 +14,7 @@ services:
         driver: "json-file"
         options:
           max-size: "20m"
-    o3:
+    client:
       image: "registry.cn-hangzhou.aliyuncs.com/banff/gbms_client:latest"
       networks:
         - network_1
