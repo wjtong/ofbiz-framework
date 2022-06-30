@@ -41,6 +41,7 @@ services:
         - "/opt/gbms/gbms_volume/config/url.properties:/root/ofbiz/framework/webapp/config/url.properties"
         - "/opt/gbms/gbms_volume/config/log4j2.xml:/root/ofbiz/framework/base/config/log4j2.xml"
         - "/opt/gbms/gbms_volume/config/security.properties:/root/ofbiz/framework/security/config/security.properties"
+        - "/opt/gbms/gbms_volume/config/jndi.properties:/root/ofbiz/framework/base/config/jndi.properties"
         - "/opt/gbms/gbms_volume/.gradle:/root/.gradle"
       logging:
         driver: "json-file"
