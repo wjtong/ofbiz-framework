@@ -1,36 +1,35 @@
-version: "2" 
+version: "2"
 
 networks:
-  network_1:
+    network_1:
 services:
-  o3:
-    image: "registry.cn-hangzhou.aliyuncs.com/banff/gbms_client:latest"
-    networks:
-      - network_1
-    ports:
-      - 92:80
-    depends_on:
-      - gbms
-    volumes:
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "20m" 
-  gbms:
-    image: "registry-vpc.cn-hangzhou.aliyuncs.com/banff/gbms:latest"
-    networks:
-       - network_1
-    ports:
-       - 8080:8080
-    volumes:
-       - "/opt/gbms/gbms_volume/config/entityengine.xml:/root/ofbiz/framework/entity/config/entityengine.xml"
-       - "/opt/gbms/gbms_volume/logs:/root/ofbiz/runtime/logs"
-       - "/opt/gbms/gbms_volume/config/ofbiz-component.xml:/root/ofbiz/framework/catalina/ofbiz-component.xml"
-       - "/opt/gbms/gbms_volume/config/url.properties:/root/ofbiz/framework/webapp/config/url.properties"
-       - "/opt/gbms/gbms_volume/config/log4j2.xml:/root/ofbiz/framework/base/config/log4j2.xml"
-       - "/opt/gbms/gbms_volume/config/security.properties:/root/ofbiz/framework/security/config/security.properties"
-       - "/opt/gbms/gbms_volume/.gradle:/root/.gradle" 
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "20m"
+    o3:
+      image: "registry.cn-hangzhou.aliyuncs.com/banff/gbms_client:latest"
+      networks:
+        - network_1
+      ports:
+        - 92:80
+      depends_on:
+        - gbms
+      logging:
+        driver: "json-file"
+        options:
+          max-size: "20m"
+    gbms:
+      image: "registry.cn-hangzhou.aliyuncs.com/banff/gbms:latest"
+      networks:
+        - network_1
+      ports:
+        - 8082:8080
+      volumes:
+        - "/opt/gbms/gbms_volume/config/entityengine.xml:/root/ofbiz/framework/entity/config/entityengine.xml"
+        - "/opt/gbms/gbms_volume/logs:/root/ofbiz/runtime/logs"
+        - "/opt/gbms/gbms_volume/config/ofbiz-component.xml:/root/ofbiz/framework/catalina/ofbiz-component.xml"
+        - "/opt/gbms/gbms_volume/config/url.properties:/root/ofbiz/framework/webapp/config/url.properties"
+        - "/opt/gbms/gbms_volume/config/log4j2.xml:/root/ofbiz/framework/base/config/log4j2.xml"
+        - "/opt/gbms/gbms_volume/config/security.properties:/root/ofbiz/framework/security/config/security.properties"
+        - "/opt/gbms/gbms_volume/.gradle:/root/.gradle"
+      logging:
+        driver: "json-file"
+        options:
+          max-size: "20m"
