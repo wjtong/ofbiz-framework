@@ -33,10 +33,7 @@ import org.codehaus.groovy.runtime.metaclass.MissingMethodExceptionNoStack;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class OfbizOdataReader extends OfbizOdataProcessor {
     private DynamicViewEntity dynamicViewEntity = null;
@@ -511,22 +508,18 @@ public class OfbizOdataReader extends OfbizOdataProcessor {
                     .where(entityCondition)
                     .from(dynamicViewEntity);
             OfbizCsdlEntityType csdlEntityType = (OfbizCsdlEntityType) edmProvider.getEntityType(new FullQualifiedName(OfbizMapOdata.NAMESPACE, this.edmEntityType.getName()));
-            //拿到数据库真实的字段
+
+            /* 如果odata请求带有select就使用, 否则select就使用EdmConfig中定义的Property, 但都需要排除语义化字段 */
             List<String> ofbizEntityAllFieldNames = delegator.makeValue(csdlEntityType.getOfbizEntity()).getModelEntity().getAllFieldNames();
-            //查询之前排除所有的语义化字段
             List<String> propertyNames = new ArrayList<>(this.edmEntityType.getPropertyNames());
             propertyNames.removeIf(property -> !ofbizEntityAllFieldNames.contains(property));
             Set<String> selectSet = UtilMisc.toSet(propertyNames);
             if (UtilValidate.isEmpty(fieldsToSelect) && !this.edmEntityType.getName().equals(this.entityName)) {
                 selectSet = UtilMisc.toSet(propertyNames);
             } else if (UtilValidate.isNotEmpty(fieldsToSelect)) {
-                if (dynamicViewEntity != null) {
-                    selectSet = fieldsToSelect;
-                } else {
-                    propertyNames = new ArrayList<>(fieldsToSelect);
-                    propertyNames.removeIf(property -> !ofbizEntityAllFieldNames.contains(property));
-                    selectSet = UtilMisc.toSet(propertyNames);
-                }
+                propertyNames = new ArrayList<>(fieldsToSelect);
+                propertyNames.removeIf(property -> !ofbizEntityAllFieldNames.contains(property));
+                selectSet = UtilMisc.toSet(propertyNames);
             }
             //如果是aggregate就只查询统计字段
             if (UtilValidate.isNotEmpty(aggregateSet)) {

@@ -878,7 +878,7 @@ public class EdmConfigLoader {
                 isCollection = true;
             }
         }
-        boolean filterByDate = true;
+        boolean filterByDate = false;
         String filterByDateAttr = navigationPropertyElement.getAttribute("FilterByDate");
         if (UtilValidate.isNotEmpty(filterByDateAttr)) {
             filterByDate = Boolean.valueOf(filterByDateAttr);
