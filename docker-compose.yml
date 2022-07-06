@@ -14,24 +14,24 @@ services:
         driver: "json-file"
         options:
           max-size: "20m"
-    client:
+    webclient:
       image: "registry.cn-hangzhou.aliyuncs.com/banff/gbms_client:latest"
       networks:
         - network_1
       ports:
         - 92:80
       depends_on:
-        - gbms
+        - backend
       logging:
         driver: "json-file"
         options:
           max-size: "20m"
-    gbms:
+    backend:
       image: "registry.cn-hangzhou.aliyuncs.com/banff/gbms:latest"
       networks:
         - network_1
       ports:
-        - 8082:8082
+        - 8082:8080
       depends_on:
         - activemq
       volumes:
