@@ -7,6 +7,7 @@
 [submodule "plugins/tradeunion"]
 	path = plugins/tradeunion
 	url = https://gitee.com/cloudlakenet/tradeunion
+	branch = master
 [submodule "plugins/alioss"]
 	path = plugins/alioss
 	url = https://gitee.com/cloudlakenet/alioss-plugin
