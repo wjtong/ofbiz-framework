@@ -1963,4 +1963,12 @@ public class Util {
 		return conditionMap;
 	}
 
+	public static EntityCondition appendCondition(EntityCondition originalCondition, EntityCondition laterCondition) {
+		if (originalCondition == null) {
+			return laterCondition;
+		} else {
+			return EntityCondition.makeCondition(originalCondition, laterCondition);
+		}
+	}
+
 }

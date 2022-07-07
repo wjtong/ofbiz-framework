@@ -6,6 +6,8 @@ import org.apache.ofbiz.base.util.StringUtil;
 import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.entity.Delegator;
+import org.apache.ofbiz.entity.GenericEntityException;
+import org.apache.ofbiz.entity.GenericPK;
 import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.condition.EntityComparisonOperator;
 import org.apache.ofbiz.entity.condition.EntityCondition;
@@ -13,8 +15,10 @@ import org.apache.ofbiz.entity.condition.EntityJoinOperator;
 import org.apache.ofbiz.entity.condition.EntityOperator;
 import org.apache.ofbiz.entity.model.DynamicViewEntity;
 import org.apache.ofbiz.entity.model.ModelEntity;
+import org.apache.ofbiz.entity.model.ModelKeyMap;
 import org.apache.ofbiz.entity.model.ModelRelation;
 import org.apache.ofbiz.entity.util.EntityFindOptions;
+import org.apache.ofbiz.entity.util.EntityUtil;
 import org.apache.ofbiz.service.GenericServiceException;
 import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ModelService;
@@ -22,15 +26,13 @@ import org.apache.ofbiz.service.ServiceUtil;
 import org.apache.olingo.commons.api.Constants;
 import org.apache.olingo.commons.api.data.*;
 import org.apache.olingo.commons.api.edm.*;
+import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
 import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
 import org.apache.olingo.commons.api.ex.ODataException;
 import org.apache.olingo.server.api.OData;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.ServiceMetadata;
-import org.apache.olingo.server.api.uri.UriInfoResource;
-import org.apache.olingo.server.api.uri.UriResource;
-import org.apache.olingo.server.api.uri.UriResourceNavigation;
-import org.apache.olingo.server.api.uri.UriResourcePrimitiveProperty;
+import org.apache.olingo.server.api.uri.*;
 import org.apache.olingo.server.api.uri.queryoption.*;
 import org.apache.olingo.server.api.uri.queryoption.apply.Aggregate;
 import org.apache.olingo.server.api.uri.queryoption.apply.AggregateExpression;
@@ -112,8 +114,7 @@ public class OfbizOdataProcessor {
             retrieveFieldsToSelect();
             retrieveFindOption();
 			retrieveOrderBy();
-            retrieveGroupBy();
-            retrieveAggregate();
+            retrieveApply();
         } catch (ODataException e) {
             e.printStackTrace();
         }
@@ -463,17 +464,24 @@ public class OfbizOdataProcessor {
         }
     }
 
+    protected void retrieveApply() throws OfbizODataException {
+        if (UtilValidate.isNotEmpty(queryOptions) && UtilValidate.isNotEmpty(queryOptions.get("applyOption"))) {
+            retrieveGroupBy();
+            retrieveAggregate();
+        }
+    }
+
     //groupBy 使用dynamicView实现group查询
     protected void retrieveGroupBy() throws OfbizODataException {
-        if (UtilValidate.isEmpty(queryOptions)) {
-            return;
-        }
         ApplyOption applyOption = (ApplyOption) queryOptions.get("applyOption");
         if (UtilValidate.isNotEmpty(applyOption) && Util.isGroupBy(applyOption)) {
-            OfbizCsdlEntityType ofbizCsdlEntityType = (OfbizCsdlEntityType) edmProvider.getEntityType(edmEntityType.getFullQualifiedName());
+            EdmStructuredType edmStructuredType = applyOption.getEdmStructuredType();
+            OfbizCsdlEntityType ofbizCsdlEntityType = (OfbizCsdlEntityType) edmProvider.getEntityType(edmStructuredType.getFullQualifiedName());
+            ModelEntity currModelEntity = delegator.getModelEntity(ofbizCsdlEntityType.getOfbizEntity());
             if (dynamicViewHolder == null) {
                 dynamicViewHolder = new DynamicViewHolder(ofbizCsdlEntityType, edmProvider, delegator, dispatcher, userLogin);
             }
+
             DynamicViewEntity dynamicViewEntity = dynamicViewHolder.getDynamicViewEntity();
             for (ApplyItem applyItem : applyOption.getApplyItems()) {
                 GroupBy groupBy = (GroupBy) applyItem;
@@ -487,7 +495,7 @@ public class OfbizOdataProcessor {
                             groupBySet = new HashSet<>();
                         }
                         groupBySet.add(segmentValue);
-                        dynamicViewEntity.addAlias(modelEntity.getEntityName(), segmentValue, segmentValue, null, false, true, null);
+                        dynamicViewEntity.addAlias(ofbizCsdlEntityType.getOfbizEntity(), segmentValue, segmentValue, null, false, true, null);
                     } else if (path.size() == 2) {
                         //子对象字段
                         //add MemberEntity
@@ -509,9 +517,9 @@ public class OfbizOdataProcessor {
                         }
                         groupBySet.add(navigationName + segmentValue);
                         //add ViewLink
-                        if (!dynamicViewHolder.hasViewLink(modelEntity.getEntityName(), navigationName)) {
-                            ModelRelation relation = modelEntity.getRelation(resourceNavigation.getSegmentValue());
-                            dynamicViewEntity.addViewLink(modelEntity.getEntityName(), navigationName, false, relation.getKeyMaps());
+                        if (!dynamicViewHolder.hasViewLink(ofbizCsdlEntityType.getOfbizEntity(), navigationName)) {
+                            ModelRelation relation = currModelEntity.getRelation(resourceNavigation.getSegmentValue());
+                            dynamicViewEntity.addViewLink(ofbizCsdlEntityType.getOfbizEntity(), navigationName, false, relation.getKeyMaps());
                         }
                     }
                 }
@@ -521,12 +529,10 @@ public class OfbizOdataProcessor {
 
 
     protected void retrieveAggregate() throws OfbizODataException {
-        if (UtilValidate.isEmpty(queryOptions)) {
-            return;
-        }
         ApplyOption applyOption = (ApplyOption) queryOptions.get("applyOption");
         if (UtilValidate.isNotEmpty(applyOption) && Util.isAggregate(applyOption)) {
-            OfbizCsdlEntityType ofbizCsdlEntityType = (OfbizCsdlEntityType) edmProvider.getEntityType(edmEntityType.getFullQualifiedName());
+            EdmStructuredType edmStructuredType = applyOption.getEdmStructuredType();
+            OfbizCsdlEntityType ofbizCsdlEntityType = (OfbizCsdlEntityType) edmProvider.getEntityType(edmStructuredType.getFullQualifiedName());
             if (dynamicViewHolder == null) {
                 dynamicViewHolder = new DynamicViewHolder(ofbizCsdlEntityType, edmProvider, delegator, dispatcher, userLogin);
             }

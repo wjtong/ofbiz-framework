@@ -8,6 +8,7 @@ import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericValue;
+import org.apache.ofbiz.entity.condition.EntityCondition;
 import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.olingo.commons.api.data.ContextURL;
 import org.apache.olingo.commons.api.data.Entity;
@@ -129,10 +130,13 @@ public class OfbizEntityCollectionProcessor implements EntityCollectionProcessor
             EdmEntitySet startEdmEntitySet = uriResourceEntitySet.getEntitySet();
             EdmType edmTypeFilter = uriResourceEntitySet.getTypeFilterOnCollection();
 
-            //处理apply
+            //处理apply 最多支持两段式的apply
             if (applyOption != null) {
+                if (resourcePathSize > 2) {
+                    throw new ODataApplicationException("Not supported", HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode(), locale);
+                }
                 try {
-                    readEntityCollectionWithApply(oDataResponse, uriInfo, startEdmEntitySet, applyOption, responseContentType);
+                    readEntityCollectionWithApply(oDataResponse, uriInfo, startEdmEntitySet, responseContentType);
                 } catch (ODataException e) {
                     throw new ODataApplicationException(e.getMessage(), HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode(), locale);
                 }
@@ -310,9 +314,13 @@ public class OfbizEntityCollectionProcessor implements EntityCollectionProcessor
     }
 
     private void readEntityCollectionWithApply(ODataResponse oDataResponse, UriInfo uriInfo,
-                                               EdmEntitySet edmEntitySet, ApplyOption applyOption, ContentType responseFormat) throws ODataException {
+                                               EdmEntitySet edmEntitySet, ContentType responseFormat) throws ODataException {
+        List<UriResource> uriResourceParts = uriInfo.getUriResourceParts();
         Map<String, Object> odataContext = UtilMisc.toMap("delegator", delegator, "dispatcher", dispatcher,
                 "edmProvider", edmProvider, "userLogin", userLogin, "httpServletRequest", httpServletRequest, "locale", locale);
+        if (uriResourceParts.size() > 1) {
+            odataContext.put("uriResourceParts", uriResourceParts);
+        }
         OfbizOdataReader ofbizOdataReader = new OfbizOdataReader(odataContext, OdataProcessorHelper.getQuernOptions(uriInfo), UtilMisc.toMap("edmBindingTarget", edmEntitySet));
         EntityCollection entityCollection = ofbizOdataReader.findList();
         StringBuilder selectList = new StringBuilder();

@@ -10,10 +10,8 @@ import org.apache.ofbiz.base.util.collections.PagedList;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.condition.EntityCondition;
-import org.apache.ofbiz.entity.model.DynamicViewEntity;
-import org.apache.ofbiz.entity.model.ModelEntity;
-import org.apache.ofbiz.entity.model.ModelRelation;
-import org.apache.ofbiz.entity.model.ModelViewEntity;
+import org.apache.ofbiz.entity.condition.EntityOperator;
+import org.apache.ofbiz.entity.model.*;
 import org.apache.ofbiz.entity.transaction.GenericTransactionException;
 import org.apache.ofbiz.entity.transaction.TransactionUtil;
 import org.apache.ofbiz.entity.util.EntityListIterator;
@@ -483,25 +481,24 @@ public class OfbizOdataReader extends OfbizOdataProcessor {
 
     private PagedList<GenericValue> findListWithDynamicView() {
         dynamicViewEntity = dynamicViewHolder.getDynamicViewEntity();
-        /********************** debug用，输出dynamicViewEntity的xml表达式 ****************************************/
-        try {
-
-            String dynamicViewXml = dynamicViewEntity.getViewXml(dynamicViewEntity.getEntityName());
-            Debug.logInfo(dynamicViewXml, module);
-            if (entityCondition != null) {
-                Debug.logInfo(entityCondition.toString(), module);
-            }
-        } catch (IOException e2) {
-            // TODO Auto-generated catch block
-            e2.printStackTrace();
-        }
-        /*******************************************************************************************************/
-
         EntityListIterator entityListIt = null;
         List<GenericValue> resultList = new ArrayList<GenericValue>();
         long listCount = 0L;
         boolean beganTransaction = false;
         try {
+            //多段式的apply 添加关联外键的查询条件
+            if (UtilValidate.isNotEmpty(odataContext.get("uriResourceParts")) && queryOptions.containsKey("applyOption")) {
+                List<UriResource> uriResourceParts = (List<UriResource>) odataContext.get("uriResourceParts");
+                EntityCondition applyCondition = procApplyCondition(uriResourceParts);
+                //没有数据
+                if (applyCondition == null) {
+                    return new PagedList<>(0, 20, (int) listCount, 0, 0, resultList);
+                }
+                entityCondition = Util.appendCondition(entityCondition, applyCondition);
+            }
+            //print
+            printDynamicView();
+
             // make sure this is in a transaction
             beganTransaction = TransactionUtil.begin();
             EntityQuery entityQuery = EntityQuery.use(delegator)
@@ -674,4 +671,55 @@ public class OfbizOdataReader extends OfbizOdataProcessor {
         }
         return entity.getProperty(edmProperty.getName());
     }
+
+    private boolean isMultiApplyQuery() {
+        if (UtilValidate.isNotEmpty(odataContext.get("uriResourceParts"))) {
+            List<UriResource> uriResourceParts = (List<UriResource>) odataContext.get("uriResourceParts");
+            if (uriResourceParts.size() > 1 && (groupBySet != null || aggregateSet != null)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private EntityCondition procApplyCondition(List<UriResource> uriResourceParts)
+            throws OfbizODataException {
+        EntityCondition returnCondition = null;
+        try {
+            UriResourceEntitySet resourceEntitySet = (UriResourceEntitySet) uriResourceParts.get(0);
+            Map<String, Object> keyMap = Util.uriParametersToMap(resourceEntitySet.getKeyPredicates(), resourceEntitySet.getEntityType());
+            OfbizCsdlEntityType ofbizCsdlEntityType = (OfbizCsdlEntityType) edmProvider.getEntityType(resourceEntitySet.getEntityType().getFullQualifiedName());
+            GenericValue mainGenericValue = delegator.findOne(ofbizCsdlEntityType.getOfbizEntity(), keyMap, true);
+            ModelRelation relation = modelEntity.getRelation(uriResourceParts.get(1).getSegmentValue());
+            for (ModelKeyMap relKeyMap : relation.getKeyMaps()) {
+                Object relValue = mainGenericValue.get(relKeyMap.getFieldName());
+                //缺少外键数据
+                if (UtilValidate.isEmpty(relValue)) {
+                    return null;
+                }
+                returnCondition = Util.appendCondition(returnCondition, EntityCondition.makeCondition(relKeyMap.getRelFieldName(), relValue));
+            }
+        } catch (GenericEntityException e) {
+            e.printStackTrace();
+        }
+        return returnCondition;
+    }
+
+    private void printDynamicView() {
+        /********************** debug用，输出dynamicViewEntity的xml表达式 ****************************************/
+        try {
+            String dynamicViewXml = dynamicViewEntity.getViewXml(dynamicViewEntity.getEntityName());
+            Debug.logInfo(dynamicViewXml, module);
+            if (entityCondition != null) {
+                Debug.logInfo(entityCondition.toString(), module);
+            }
+        } catch (IOException e2) {
+            // TODO Auto-generated catch block
+            e2.printStackTrace();
+        }
+        /*******************************************************************************************************/
+
+    }
+
+
 }
