@@ -485,8 +485,10 @@
 		<NavigationProperty Name="OrderRole" AutoBinding="true" FilterByDate="false"/>
 		<NavigationProperty Name="WebSite" AutoBinding="true" FilterByDate="false"/>
 		<NavigationProperty Name="ProductStore" AutoBinding="true" FilterByDate="false"/>
+		<NavigationProperty Name="OrderAttribute" AutoBinding="true" FilterByDate="false"/>
 	</EntityType>
-	<EntityType Name="OrderItem" AutoAnnotations="true" LabelPrefix="Order" AutoProperties="true" SearchOption="productInternalName">
+	<EntityType Name="OrderItem" AutoAnnotations="true" LabelPrefix="Order"
+				AutoProperties="true" SearchOption="productInternalName" GroupBy="false">
 		<RelAlias Name="ProductRel" Relations="Product"/>
 		<Property Name="productInternalName" RelAlias="ProductRel" Field="internalName"/>
 		<RelAlias Name="OrderHeaderRel" Relations="OrderHeader"/>
@@ -555,6 +557,7 @@
 		<NavigationProperty Name="UserPreference" Type="UserPreference" FilterByDate="false"/>
 	</EntityType>
 	<EntityType Name="RoleType" AutoProperties="true"/>
+	<EntityType Name="OrderAttribute" AutoProperties="true"/>
 	<EntityType Name="UserPreference" AutoProperties="true"/>
 	<EntityType Name="PartyGroup" BaseType="Party" AutoProperties="true"/>
 
@@ -1000,6 +1003,7 @@
 			<NavigationPropertyBinding Path="ProductStore" Target="ProductStores"/>
 		</EntitySet>
 		<EntitySet Name="WebSites" EntityType="WebSite"/>
+		<EntitySet Name="OrderAttributes" EntityType="OrderAttribute"/>
 		<EntitySet Name="WebSitePathAliass" EntityType="WebSitePathAlias"/>
 		<EntitySet Name="PartyRoleAndPartyDetails" EntityType="PartyRoleAndPartyDetail"/>
 		<EntitySet Name="PartyAndContactMechs" EntityType="PartyAndContactMech"/>
