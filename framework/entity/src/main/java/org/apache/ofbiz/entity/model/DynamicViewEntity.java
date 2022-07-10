@@ -297,7 +297,6 @@ public class DynamicViewEntity {
     	this.viewLinks.addAll(modelViewLinks);
     }
 
-
     public void addAllViewLinksToList(List<ModelViewLink> addList) {
         addList.addAll(this.viewLinks);
     }
